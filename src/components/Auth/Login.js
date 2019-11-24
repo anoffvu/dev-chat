@@ -39,8 +39,8 @@ export class Login extends Component {
         .auth()
         .signInWithEmailAndPassword(this.state.email, this.state.password)
         .then(signedInUser => {
-          console.log(signedInUser);
-          console.log('user Signed in!');
+          // console.log(signedInUser);
+          // console.log('user Signed in!');
         })
         .catch(err => {
           console.error(err);
