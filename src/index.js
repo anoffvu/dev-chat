@@ -2,8 +2,8 @@ import React from 'react';
 import ReactDOM from 'react-dom';
 
 import App from './components/App';
-import Login from './components/Auth/Register';
-import Register from './components/Auth/Login';
+import Register from './components/Auth/Register';
+import Login from './components/Auth/Login';
 import registerServiceWorker from './registerServiceWorker';
 import { BrowserRouter as Router, Switch, Route } from 'react-router-dom';
 
