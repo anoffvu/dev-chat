@@ -8,21 +8,17 @@ export class Channels extends Component {
   state = {
     user: this.props.currentUser,
     channels: [],
+    activeChannel: '',
     channelName: '',
     channelDetails: '',
     channelsRef: firebase.database().ref('channels'),
-    modal: false
+    modal: false,
+    firstLoad: true
   };
 
   componentDidMount() {
     this.addListeners();
   }
-
-  // change channel state globally
-  changeChannel = channel => {
-    // console.log('change called on' + channel);
-    this.props.setCurrentChannel(channel);
-  };
 
   // add all listeners
   addListeners = () => {
@@ -30,12 +26,41 @@ export class Channels extends Component {
     this.state.channelsRef.on('child_added', snap => {
       loadedChannels.push(snap.val());
       // console.log(loadedChannels);
-      this.setState({ channels: loadedChannels });
-      console.log(this.state.channels);
+      this.setState({ channels: loadedChannels }, () => this.setFirstChannel());
+      // console.log(this.state.channels);
     });
   };
 
-  // handles any imput changes to reflect in state
+  componentWillUnmount() {
+    this.removeListeners();
+  }
+
+  removeListeners = () => {
+    this.state.channelsRef.off();
+  };
+
+  // change channel state globally
+  changeChannel = channel => {
+    this.setActiveChannel(channel);
+    this.props.setCurrentChannel(channel);
+  };
+
+  // sets the channel to be active
+  setActiveChannel = channel => {
+    this.setState({ activeChannel: channel.id });
+  };
+
+  // sets inital channel to first channel
+  setFirstChannel = () => {
+    if (this.state.firstLoad && this.state.channels.length > 0) {
+      const firstChannel = this.state.channels[0];
+      this.props.setCurrentChannel(firstChannel);
+      this.setActiveChannel(firstChannel);
+    }
+    this.setState({ firstLoad: false });
+  };
+
+  // handles any input changes to reflect in state
   handleChange = event => {
     this.setState({ [event.target.name]: event.target.value });
   };
@@ -103,6 +128,7 @@ export class Channels extends Component {
         }}
         name={channel.name}
         style={{ opacity: 0.7 }}
+        active={channel.id === this.state.activeChannel}
       >
         # {channel.name}
       </Menu.Item>
