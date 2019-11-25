@@ -15,7 +15,7 @@ import {
 } from 'react-router-dom';
 import 'semantic-ui-css/semantic.min.css';
 
-import { setUser } from './actions';
+import { setUser, clearUser } from './actions';
 
 import { createStore } from 'redux';
 import { Provider, connect } from 'react-redux';
@@ -28,12 +28,18 @@ const store = createStore(rootReducer, composeWithDevTools());
 class Root extends Component {
   // if already authenticated, send to home page
   componentDidMount() {
-    console.log(this.props.isLoading);
+    // console.log(this.props.isLoading);
+
+    // changes in the firebase authentication state
     firebase.auth().onAuthStateChanged(user => {
       if (user) {
         // console.log(user);
         this.props.setUser(user);
         this.props.history.push('./');
+      } else {
+        // if no active user is found
+        this.props.history.push('/login');
+        this.props.clearUser();
       }
     });
   }
@@ -55,8 +61,10 @@ const mapStateFromProps = state => ({
   isLoading: state.user.isLoading
 });
 
-// connecting to roo makes the state a part of the props
-const RootWithAuth = withRouter(connect(mapStateFromProps, { setUser })(Root));
+// connecting to root makes the state a part of the props
+const RootWithAuth = withRouter(
+  connect(mapStateFromProps, { setUser, clearUser })(Root)
+);
 
 ReactDOM.render(
   <Provider store={store}>

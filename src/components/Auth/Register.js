@@ -105,7 +105,6 @@ class Register extends Component {
               console.log(createdUser);
               this.saveUser(createdUser).then(() => {
                 console.log('user saved');
-                this.setState({ loading: false });
               });
             })
             .catch(err => {

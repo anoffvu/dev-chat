@@ -131,7 +131,7 @@ export class Login extends Component {
           )}
 
           <Message>
-            Don't have an account?<Link to='/register'>Register</Link>{' '}
+            Don't have an account? <Link to='/register'>Register</Link>{' '}
           </Message>
         </GridColumn>
       </Grid>
